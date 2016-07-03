@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ClipView</string>
+    <string name="action_settings">Settings</string>
+    <string name="info">测试 dirty bounds</string>
+</resources>
