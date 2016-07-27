@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+    
+    ShakeController mShakeController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,ShakeActivity.class));
             }
         });
+    
+        mShakeController = new ShakeController(this);
+        mShakeController.setOnShakedListener(new ShakeController.OnShakedListener() {
+            @Override
+            public void onShake() {
+                Toast.makeText(MainActivity.this, "yaoyiyao", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 //        mGestureDetector = new GestureDetector(this, mSimpleOnGestureListener);
 //        backgroundDrawable = new DirtyDrawable(this);
@@ -59,26 +70,16 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
     }
-
+    
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    protected void onResume() {
+        super.onResume();
+        mShakeController.startWatchShake();
     }
-
+    
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    protected void onPause() {
+        super.onPause();
+        mShakeController.stopWatchShake();
     }
 }
