@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.text.TextPaint;
+import com.example.xiaoyee.clipview.utils.Log;
 
 /**
  * Created by xiaoyee on 16/6/29.
@@ -32,21 +33,21 @@ public class DirtyDrawable extends Drawable {
 
     private int[] mStateSetCurrent;
 
-    String infoToShow = "DIRTY DRAWABLE";
+    private static final String infoToShow = "DIRTY DRAWABLE";
     TextPaint mTextPaint;
     private int mTextSize;
     
     //0000 0010
-    private byte REFRESH_ALL = 0X01 << 1;
+    private static final byte REFRESH_ALL = 0X01 << 1;
     //0000 0100
-    private byte REFRESH_SWITCH = 0X01 << 2;
+    private static final byte REFRESH_SWITCH = 0X01 << 2;
     
     private byte refreshType = REFRESH_ALL;
     
     private boolean isRefreshAll(){
         return (refreshType & REFRESH_ALL) != 0;
     }
-
+    
     DirtyDrawable(Context context){
         this.mContext = context;
         mDirtyBean = new DirtyBean();
@@ -69,18 +70,22 @@ public class DirtyDrawable extends Drawable {
     @Override
     public void draw(Canvas canvas) {
         final Rect bounds = getDirtyBounds();
+//        bounds.union(111,111,1000,1110);
     
         canvas.save();
     
         canvas.clipRect(bounds);
-        canvas.drawText(infoToShow, 300, 400, mTextPaint);
-        if (!isRefreshAll()) {
-            canvas.drawRect(bounds, mTextPaint);
-        }
         drawSwitchDrawable(canvas);
-        
+//        if (!canvas.quickReject(111, 111, 1000, 1110, Canvas.EdgeType.AA)) {
+            canvas.drawRect(111, 111, 1000, 1110, mTextPaint);
+//            log("在范围中");
+//        } else {
+//            log("不在范围中");
+//        }
         
         canvas.restore();
+        
+    
     }
 
 
@@ -92,6 +97,7 @@ public class DirtyDrawable extends Drawable {
         final boolean lastPushable = mDirtyBean.isPushable();
         mDirtyBean.setPushable(!lastPushable);
         mDrawingBounds.set(switchBounds);
+        log("toggleSwitch:" + switchBounds.toShortString());
         refreshType = REFRESH_SWITCH;
         invalidateSelf();
     }
@@ -110,16 +116,18 @@ public class DirtyDrawable extends Drawable {
         switchBounds.bottom = (int) (switchBounds.top + switchPicHeight);
         switchDrawable.setBounds(switchBounds);
         switchDrawable.draw(canvas);
+        
+        log("drawSwitchDrawable:" + switchBounds.toShortString());
+        
         refreshType = REFRESH_ALL;
     }
 
     @Override
     public Rect getDirtyBounds() {
         if (!isRefreshAll()) {
-            final Rect drawingBounds = mDrawingBounds;
             final Rect dirtyBounds = mDirtyBounds;
-            dirtyBounds.set(drawingBounds);
-            drawingBounds.setEmpty();
+            dirtyBounds.set(mDrawingBounds);
+            log("getDirtyBounds:" + dirtyBounds.toShortString());
             return dirtyBounds;
         } else {
             return getBounds();
@@ -143,5 +151,9 @@ public class DirtyDrawable extends Drawable {
     @Override
     public int getOpacity() {
         return 0;
+    }
+    
+    private void log(String infoToShow) {
+        Log.d("dirty", infoToShow);
     }
 }

@@ -20,8 +20,12 @@ co_second_phase(){
     base_method b1.1.1
 }
 
+#co_changeOri_phase(){
+#    base_method b1.1.1
+#}
+
 git branch
-options=("一期项目" "二期项目" "三期项目")
+options=("一期项目" "二期项目" "三期项目" "横竖屏分支")
 echo "你想切到哪期项目？"
 select choice in ${options[*]};do
 	break;
@@ -33,6 +37,12 @@ case "$choice" in
 		co_first_phase
 		;;
 	${options[1]})
+		co_second_phase
+		;;
+    ${options[2]})
+        co_second_phase
+        ;;
+    ${options[3]})
 		co_second_phase
 		;;
 	esac
