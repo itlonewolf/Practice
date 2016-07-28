@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class ShakeController implements SensorEventListener {
     
     /**
-     * 设当加速度的绝对值大于55时才算一次摇动
+     * 设当绝对值大于55时才算一次摇动
      */
     private static final int SHAKE_SLOP = 55;
     /**
@@ -41,12 +41,19 @@ public class ShakeController implements SensorEventListener {
     private OnShakedListener mOnShakedListener;
     
     
+    /**
+     *
+     * @param needVibrate 是否需要开启震动
+     */
     public ShakeController(Context context, boolean needVibrate) {
         mNeedVibrate = needVibrate;
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
     
+    /**
+     * 默认开启震动
+     */
     public ShakeController(Context context) {
         this(context, true);
     }
@@ -106,7 +113,7 @@ public class ShakeController implements SensorEventListener {
     
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        
+        //暂时不关心此更改
     }
     
     /**

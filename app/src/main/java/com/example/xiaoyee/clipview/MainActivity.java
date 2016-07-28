@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     
-    ShakeController mShakeController;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,14 +49,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,ShakeActivity.class));
             }
         });
-    
-        mShakeController = new ShakeController(this);
-        mShakeController.setOnShakedListener(new ShakeController.OnShakedListener() {
-            @Override
-            public void onShake() {
-                Toast.makeText(MainActivity.this, "yaoyiyao", Toast.LENGTH_SHORT).show();
-            }
-        });
 
 //        mGestureDetector = new GestureDetector(this, mSimpleOnGestureListener);
 //        backgroundDrawable = new DirtyDrawable(this);
@@ -74,12 +64,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mShakeController.startWatchShake();
     }
     
     @Override
     protected void onPause() {
         super.onPause();
-        mShakeController.stopWatchShake();
     }
 }
